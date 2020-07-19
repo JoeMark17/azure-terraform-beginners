@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "tf_azure_guide" {
   }
 
 resource "azurerm_storage_account" "example" {
-  name                     = "storageaccountname"
+  name                     = "terraformstoragetestjoe1"
   resource_group_name      = azurerm_resource_group.tf_azure_guide.name
   location                 = azurerm_resource_group.tf_azure_guide.location
   account_tier             = "Standard"
