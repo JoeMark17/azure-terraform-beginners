@@ -18,6 +18,15 @@ resource "azurerm_resource_group" "tf_azure_guide" {
   location = "${var.location}"
   }
 
+resource "azurerm_storage_account" "example" {
+  name                     = "storageaccountname"
+  resource_group_name      = azurerm_resource_group.tf_azure_guide.name
+  location                 = azurerm_resource_group.tf_azure_guide.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+  account_kind             = "StorageV2"
+  access_tier              = "Hot"
+}
 # The next resource is a Virtual Network. We can dynamically place it into the
 # resource group without knowing its name ahead of time. Terraform handles all
 # of that for you, so everything is named consistently every time. Say goodbye
