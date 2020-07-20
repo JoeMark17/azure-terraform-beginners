@@ -21,7 +21,7 @@ resource "azurerm_resource_group" "example" {
   }
 
 resource "azurerm_storage_account" "example" {
-  name                     = "terraformstoragetestjoe1"
+  name                     = "etlfunctionsterraform"
   resource_group_name      = azurerm_resource_group.example.name
   location                 = azurerm_resource_group.example.location
   account_tier             = "Standard"
@@ -31,19 +31,19 @@ resource "azurerm_storage_account" "example" {
 }
 
 resource "azurerm_app_service_plan" "example" {
-  name                = "terraformest-appserviceplan-pro"
+  name                = "etlfunctions-ASP-terraform"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   kind                = "Linux"
   reserved             = true
   sku {
-    tier = "Standard"
-    size = "S1"
+    tier = "Free"
+    size = "F1"
   }
 }
 
 resource "azurerm_function_app" "example" {
-  name                      = "terraform-test-azure-functions"
+  name                      = "etlfunctions-terraform-azurefunctions"
   location                  = azurerm_resource_group.example.location
   resource_group_name       = azurerm_resource_group.example.name
   app_service_plan_id       = azurerm_app_service_plan.example.id
@@ -54,5 +54,81 @@ resource "azurerm_function_app" "example" {
         FUNCTIONS_WORKER_RUNTIME = "python"
         FUNCTION_APP_EDIT_MODE = "readonly"
         WEBSITE_PYTHON_DEFAULT_VERSION = "~3.7"
+        WEBSITE_RUN_FROM_PACKAGE = "https://github.com/JoeMark17/Azure-Terraform-Functions.git"
     }
+}
+
+resource "azurerm_postgresql_server" "example" {
+  name                = "etlfunctions-dev-terraformpg"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  sku_name = "B_Gen5_1"
+
+  storage_mb                   = 5120
+  backup_retention_days        = 7
+  geo_redundant_backup_enabled = false
+  auto_grow_enabled            = true
+
+  administrator_login          = "pythonframeworkadmin"
+  administrator_login_password = "Postgresserver@dmin"
+  version                      = "10"
+  ssl_enforcement_enabled      = true
+}
+
+resource "azurerm_postgresql_firewall_rule" "example" {
+  name                = "terraform"
+  resource_group_name = azurerm_resource_group.example.name
+  server_name         = azurerm_postgresql_server.example.name
+  start_ip_address    = "40.112.8.12"
+  end_ip_address      = "40.112.8.12"
+}
+
+resource "azurerm_postgresql_database" "example" {
+  name                = "AdventureWorksDWH"
+  resource_group_name = azurerm_resource_group.example.name
+  server_name         = azurerm_postgresql_server.example.name
+  charset             = "UTF8"
+  collation           = "English_United States.1252"
+}
+
+resource "azurerm_postgresql_server" "example2" {
+  name                = "etlfunctions-source-terraformpg"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  sku_name = "B_Gen5_1"
+
+  storage_mb                   = 5120
+  backup_retention_days        = 7
+  geo_redundant_backup_enabled = false
+  auto_grow_enabled            = true
+
+  administrator_login          = "pythonframeworkadmin"
+  administrator_login_password = "Postgresserver@dmin"
+  version                      = "10"
+  ssl_enforcement_enabled      = true
+}
+
+resource "azurerm_postgresql_firewall_rule" "example2" {
+  name                = "terraform"
+  resource_group_name = azurerm_resource_group.example.name
+  server_name         = azurerm_postgresql_server.example2.name
+  start_ip_address    = "40.112.8.12"
+  end_ip_address      = "40.112.8.12"
+}
+
+resource "azurerm_postgresql_database" "example2" {
+  name                = "AdventureWorks"
+  resource_group_name = azurerm_resource_group.example.name
+  server_name         = azurerm_postgresql_server.example2.name
+  charset             = "UTF8"
+  collation           = "English_United States.1252"
+}
+
+resource "azurerm_data_factory" "example" {
+  name                = "etlfunctions-terraform-adf"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
 }
