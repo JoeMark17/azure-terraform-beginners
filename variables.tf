@@ -14,3 +14,8 @@ variable "resource_group_prod" {
   description = "The name of your Azure Resource Group."
   default     = "analytics8-etlfunctions-development-rg"
 }
+
+variable "location" {
+  description = "The region where the virtual network is created."
+  default     = "eastus"
+}
