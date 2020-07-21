@@ -14,7 +14,7 @@ provider "azurerm" {
 
 #Resource Group
 resource "azurerm_resource_group" "example" {
-  name     = "${var.resource_group}"
+  name     = "${var.resource_group_dev}"
   location = "${var.location}"
   }
 
@@ -156,7 +156,7 @@ resource "azurerm_data_factory" "dev" {
 
 #Resource Group
 resource "azurerm_resource_group" "prod" {
-  name     = "${var.resource_group}"
+  name     = "${var.resource_group_prod}"
   location = "${var.location}"
   }
 
